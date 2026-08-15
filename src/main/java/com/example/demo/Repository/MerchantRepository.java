@@ -1,0 +1,22 @@
+package com.example.demo.Repository;
+
+
+import com.example.demo.entities.MerchantEntity;
+import jakarta.persistence.LockModeType;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import javax.swing.text.html.Option;
+import java.util.Optional;
+import java.util.UUID;
+
+public interface MerchantRepository extends JpaRepository<MerchantEntity,Long> {
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT m FROM MerchantEntity m WHERE m.id = :id")
+    Optional<MerchantEntity> findByIdForUpdate(@Param("id") Long id);
+
+
+}
