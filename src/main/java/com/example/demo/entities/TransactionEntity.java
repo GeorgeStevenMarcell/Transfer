@@ -13,11 +13,11 @@ import java.util.UUID;
 
 @Entity
 @Data
+@Table(name = "transactions")
 public class TransactionEntity {
 
     @Id
     @Column(unique = true)
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID transactionId;
 
     @NotNull
@@ -27,15 +27,16 @@ public class TransactionEntity {
     private String destinationAcct;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private TransactionStatusEnum status;
 
     private String failureReason;
 
     @CreationTimestamp
-    private Date createAt;
+    private Date createdAt;
 
     @UpdateTimestamp
-    private Date updateAt;
+    private Date updatedAt;
 
     private Long merchantId;
 }

@@ -1,17 +1,18 @@
 package com.example.demo.services;
 
-import com.example.demo.Repository.MerchantRepository;
-import com.example.demo.Repository.TransactionRepository;
+import com.example.demo.repository.MerchantRepository;
+import com.example.demo.repository.TransactionRepository;
 import com.example.demo.dtos.TransferRequestDTO;
 import com.example.demo.dtos.TransferResponseDTO;
 import com.example.demo.entities.MerchantEntity;
 import com.example.demo.entities.TransactionEntity;
 import com.example.demo.enums.TransactionStatusEnum;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -53,18 +54,14 @@ public class TransferService {
             Optional<MerchantEntity> merchantEntityOptional = merchantRepository.findByIdForUpdate(requestDTO.getMerchantId());
             if(merchantEntityOptional.isEmpty()){
                 if(!requestDTO.getMerchantId().equals(HARD_CODED_MERCHANT_ID))
-                    return ResponseEntity
-                            .status(HttpStatus.BAD_REQUEST)
-                            .body(new TransferResponseDTO());
+                    throw new Exception("Invalid Merchant");
             }
 
             MerchantEntity merchant = merchantEntityOptional.get();
 
 
             if(merchant.getBalance().compareTo(requestDTO.getAmount()) < 0)
-                return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new TransferResponseDTO());
+                throw new Exception("Balance Not Enough");
 
             merchant.setBalance(merchant.getBalance().subtract(requestDTO.getAmount()));
 
@@ -75,7 +72,7 @@ public class TransferService {
             transaction.setTransactionId(transactionId);
             transaction.setAmount(requestDTO.getAmount());
             transaction.setMerchantId(requestDTO.getMerchantId());
-            transaction.setDestinationAcct(merchant.getAccountNumber());
+            transaction.setDestinationAcct(requestDTO.getDestinationAcct());
             transaction.setStatus(TransactionStatusEnum.PENDING);
 
             transactionRepository.save(transaction);
@@ -88,7 +85,7 @@ public class TransferService {
             System.out.println(e.toString());
             throw e;
         } finally {
-
+            responseDTO.setStatus(TransactionStatusEnum.PENDING);
         }
 
 

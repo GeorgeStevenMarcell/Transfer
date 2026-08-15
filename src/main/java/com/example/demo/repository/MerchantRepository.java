@@ -1,4 +1,4 @@
-package com.example.demo.Repository;
+package com.example.demo.repository;
 
 
 import com.example.demo.entities.MerchantEntity;
@@ -8,9 +8,7 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
-import java.util.UUID;
 
 public interface MerchantRepository extends JpaRepository<MerchantEntity,Long> {
 

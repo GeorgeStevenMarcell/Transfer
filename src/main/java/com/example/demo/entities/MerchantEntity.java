@@ -1,9 +1,6 @@
 package com.example.demo.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,6 +12,7 @@ import java.util.Date;
 
 @Entity
 @Data
+@Table(name = "merchants")
 public class MerchantEntity {
 
     @Id
