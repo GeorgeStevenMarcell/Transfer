@@ -12,4 +12,24 @@ spring:
     listener:
       simple:
         acknowledge-mode: manual
-        prefetch: 1
+        prefetch: 10
+        concurrency: 10
+        max-concurrency: 20
+
+---
+spring:
+  config:
+    activate:
+      on-profile: api
+  rabbitmq:
+    listener:
+      simple:
+        auto-startup: false
+
+---
+spring:
+  config:
+    activate:
+      on-profile: worker
+  main:
+    web-application-type: none
