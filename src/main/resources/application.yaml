@@ -7,3 +7,9 @@ spring:
     hibernate:
       ddl-auto: validate
     open-in-view: false
+  rabbitmq:
+    host: localhost
+    listener:
+      simple:
+        acknowledge-mode: manual
+        prefetch: 1
