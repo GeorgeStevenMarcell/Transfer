@@ -36,8 +36,8 @@ docker compose exec -T postgres psql -U doitpay -d doitpay   -c "SELECT status, 
 # Corners I cut
 - No retry on failed transaction. It will instantly give a failure or success respond
 - The timestamp does not have any timezone on it. So it will use what settings the system has.
-- No DLQ.
-- No transactional outbox.
+- No DLQ. If there is a bad request it won't resolve the issue
+- No transactional outbox. If there is a message being in transit and the api stops working, it will be lost
 - No client-side idempotency key. The idempotency key only generated in the backend side of things, so if its the same request because the client has a RTT but the server already process it, the same transaction will be processed again
 - No message signing. The request can be tampered with in transit.
 
